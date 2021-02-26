@@ -1,4 +1,4 @@
-# orgradio
+# OrgRadio
 
 Ai Radio Application.. To play Music and Powered With Voice Speacker which you can Search For any Radio [FM] by Your Voice.
 
