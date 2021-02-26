@@ -37,8 +37,21 @@ class _HomeState extends State<Home> {
 
   setupAlan() {
     AlanVoice.addButton(
-        "b6ab2494580f948b960acf87886a50922e956eca572e1d8b807a3e2338fdd0dc/stage",
-        buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT);
+      "b6ab2494580f948b960acf87886a50922e956eca572e1d8b807a3e2338fdd0dc/stage",
+      buttonAlign: AlanVoice.BUTTON_ALIGN_RIGHT,
+    );
+    AlanVoice.callbacks.add((command) => _handelComnd(command.data));
+  }
+
+  _handelComnd(Map<String, dynamic> response) {
+    switch (response['comand']) {
+      case "play":
+        _playingRadio(_selectedRadio.url);
+        break;
+      default:
+        print("Comand is ${response['comand']}");
+        break;
+    }
   }
 
   _fetchData() async {
@@ -47,6 +60,8 @@ class _HomeState extends State<Home> {
     });
     var radData = await rootBundle.loadString('assets/RadioData.json');
     radios = MyRadioList.fromJson(radData).radios;
+    _selectedRadio = radios[0];
+    _seletcedColor = Color(int.tryParse(_selectedRadio.color));
     print(radios);
     setState(() {
       _loading = false;
@@ -93,6 +108,7 @@ class _HomeState extends State<Home> {
                         enlargeCenterPage: true,
                         onPageChanged: (index) {
                           final color = radios[index].color;
+                          _selectedRadio = radios[index];
                           _seletcedColor = Color(int.tryParse(color));
                           setState(() {});
                         },
@@ -138,7 +154,7 @@ class _HomeState extends State<Home> {
                                 alignment: Alignment.center,
                                 child: [
                                   Icon(
-                                    CupertinoIcons.play_circle,
+                                    Icons.play_circle_fill_outlined,
                                     color: Colors.white,
                                   ),
                                   10.heightBox,
@@ -178,8 +194,8 @@ class _HomeState extends State<Home> {
                                 .makeCentered(),
                           Icon(
                             _isPlaying
-                                ? CupertinoIcons.stop_circle
-                                : CupertinoIcons.play_circle,
+                                ? Icons.stop
+                                : Icons.play_circle_fill_outlined,
                             color: Colors.white,
                             size: 50.0,
                           ).onInkTap(() {
