@@ -48,6 +48,23 @@ class _HomeState extends State<Home> {
       case "play":
         _playingRadio(_selectedRadio.url);
         break;
+      case "stop":
+        _audioPlayer.stop();
+        break;
+      case "next":
+        final index = _selectedRadio.id;
+        MyRadio newRadio;
+        if (index + 1 > radios.length) {
+          newRadio = radios.firstWhere((element) => element.id == 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        } else {
+          newRadio = radios.firstWhere((element) => element.id == index + 1);
+          radios.remove(newRadio);
+          radios.insert(0, newRadio);
+        }
+        _playingRadio(newRadio.url);
+        break;
       default:
         print("Comand is ${response['comand']}");
         break;
